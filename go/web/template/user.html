@@ -9,11 +9,15 @@
   </head>
   <body>
     <div>
-      <img class="avatar" src="{{ .picture }}" />
-      <h2>Welcome {{ .nickname }}</h2>
+      <img class="avatar" src="{{ index .Profile "picture" }}" />
+      <h2>Welcome {{ index .Profile "nickname" }}</h2>
       <button class="btn-logout" onclick="window.location.href='/logout'">
         Logout
       </button>
     </div>
+    <section>
+      <h3>ID Token Claims</h3>
+      <pre>{{ .Pretty }}</pre>
+    </section>
   </body>
 </html>
