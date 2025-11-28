@@ -1,4 +1,19 @@
+# Python
 .venv/
 *.pyc
 __pycache__/
 .env
+
+# Maven build output
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Auth0 secrets
+java/src/main/resources/auth0.properties

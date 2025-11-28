@@ -1,0 +1,6 @@
+auth0.domain=YOUR_DOMAIN
+auth0.clientId=YOUR_CLIENT_ID
+auth0.clientSecret=YOUR_CLIENT_SECRET
+
+# External base URL of this app (for building callback/logout URLs)
+app.baseUrl=http://localhost:3000
