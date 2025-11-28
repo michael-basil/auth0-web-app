@@ -1,0 +1,19 @@
+<!-- web/template/user.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>User</title>
+    <script src="/public/js/js.cookie.js"></script>
+    <script src="/public/js/user.js"></script>
+  </head>
+  <body>
+    <div>
+      <img class="avatar" src="{{ .picture }}" />
+      <h2>Welcome {{ .nickname }}</h2>
+      <button class="btn-logout" onclick="window.location.href='/logout'">
+        Logout
+      </button>
+    </div>
+  </body>
+</html>
