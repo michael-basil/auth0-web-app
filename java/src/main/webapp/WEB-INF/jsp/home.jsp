@@ -11,6 +11,7 @@
 
 <p>ID Token:</p>
 <pre>${idToken}</pre>
+<pre>${pretty}</pre>
 
 <p><a href="${pageContext.request.contextPath}/logout">Logout</a></p>
 </body>
