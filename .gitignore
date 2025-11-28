@@ -17,3 +17,38 @@ target/
 
 # Auth0 secrets
 java/src/main/resources/auth0.properties
+
+# -------------------------
+# .NET / ASP.NET Core
+# -------------------------
+
+# Build output
+bin/
+obj/
+out/
+
+# .NET User Secrets (do not commit)
+**/secrets.json
+
+# Environment-specific config
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+
+# VSCode / Visual Studio / Rider
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/
+.idea/
+*.csproj.user
+*.cache/
+*.db
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
