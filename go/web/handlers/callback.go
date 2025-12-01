@@ -59,6 +59,9 @@ func Callback(auth *authenticator.Authenticator) gin.HandlerFunc {
 		log.Printf("[callback] verified ID token for subject=%v", profile["sub"])
 
 		session.Set("access_token", token.AccessToken)
+		if token.RefreshToken != "" {
+			session.Set("refresh_token", token.RefreshToken)
+		}
 		session.Set("profile", profile)
 		session.Delete("code_verifier")
 		session.Delete("state")

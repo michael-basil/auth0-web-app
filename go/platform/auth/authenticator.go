@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -38,7 +39,7 @@ func New() (*Authenticator, error) {
 		ClientSecret: os.Getenv("AUTH0_CLIENT_SECRET"),
 		RedirectURL:  os.Getenv("AUTH0_CALLBACK_URL"),
 		Endpoint:     provider.Endpoint(),
-		Scopes:       []string{oidc.ScopeOpenID, "profile"},
+		Scopes:       buildScopes(),
 	}
 
 	return &Authenticator{
@@ -60,6 +61,14 @@ func (a *Authenticator) VerifyIDToken(ctx context.Context, token *oauth2.Token) 
 	}
 
 	return a.Verifier(oidcConfig).Verify(ctx, rawIDToken)
+}
+
+func buildScopes() []string {
+	defaultScopes := []string{oidc.ScopeOpenID, "profile", "offline_access"}
+	if custom := strings.Fields(os.Getenv("AUTH0_SCOPES")); len(custom) > 0 {
+		return custom
+	}
+	return defaultScopes
 }
 
 type loggingTransport struct {

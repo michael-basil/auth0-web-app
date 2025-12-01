@@ -17,10 +17,41 @@
       <button onclick="window.location.href='/userinfo'">
         Call /userinfo
       </button>
+      <button id="refresh-button">Refresh Tokens</button>
     </div>
     <section>
       <h3>ID Token Claims</h3>
       <pre>{{ .Pretty }}</pre>
     </section>
+    <script>
+      const refreshButton = document.getElementById('refresh-button');
+      refreshButton.addEventListener('click', () => {
+        fetch('/refresh', { method: 'POST' })
+          .then(async (response) => {
+            const text = await response.text();
+            try {
+              const json = JSON.parse(text);
+              return response.ok
+                ? json
+                : Promise.reject(json.error || json.message || text);
+            } catch {
+              if (response.ok) {
+                return text;
+              }
+              return Promise.reject(text || 'Unexpected error');
+            }
+          })
+          .then((data) => {
+            const message =
+              typeof data === 'object'
+                ? JSON.stringify(data, null, 2)
+                : String(data);
+            alert(message);
+          })
+          .catch((err) => {
+            alert(`Refresh failed: ${err}`);
+          });
+      });
+    </script>
   </body>
 </html>

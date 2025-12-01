@@ -24,6 +24,7 @@ Create a file named `.env`:
     AUTH0_CLIENT_SECRET=YOUR_CLIENT_SECRET
     APP_BASE_URL=https://your-codespace-id-3000.app.github.dev
     AUTH0_AUDIENCE=https://YOUR-API-IDENTIFIER   # optional, required if you want an API Access Token
+    AUTH0_SCOPES=openid profile offline_access  # optional override (default already requests offline_access)
 
 > Codespaces gives you a public URL that looks like\
 > `https://<id>-3000.app.github.dev`\
@@ -53,6 +54,14 @@ Assume your Codespaces public URL is:
 
 > Note: Even though your Go app listens on port 3000, Codespaces exposes
 > it **without** `:3000` in the external URL.
+
+### Enable Refresh Tokens
+
+If you want to test refresh tokens:
+
+1. In the Auth0 Dashboard, open your Application → **Settings → Advanced Settings → Grant Types** and ensure **Refresh Token** is enabled.
+2. Under **Token Settings**, enable **Refresh Token Rotation** (recommended) and configure the absolute expiry to taste.
+3. If you set `AUTH0_AUDIENCE`, make sure that API allows the `offline_access` scope.
 
 ------------------------------------------------------------------------
 
@@ -88,6 +97,10 @@ Assume your Codespaces public URL is:
     → uses the stored Access Token\
     → calls Auth0's `/userinfo` endpoint and returns the JSON response
 
+-   `/refresh`\
+    → exchanges the stored refresh token for new tokens\
+    → updates the session (Auth0 refresh token rotation supported)
+
 ------------------------------------------------------------------------
 
 ## 4. Run the Application (Go 1.21+)
@@ -107,7 +120,8 @@ Open the forwarded HTTPS URL in your browser, and you should be able to:
 -   Use Auth0 Universal Login\
 -   Return authenticated to `/user`\
 -   View your profile info
--   Click **Call /userinfo** to see the Access Token in action
+-   Click **Call /userinfo** to see the Access Token in action\
+-   Click **Refresh Tokens** to perform a refresh grant
 
 ------------------------------------------------------------------------
 
