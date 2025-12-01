@@ -19,6 +19,7 @@ func Callback(auth *authenticator.Authenticator) gin.HandlerFunc {
 		session := sessions.Default(ctx)
 		queryState := ctx.Query("state")
 		authorizationCode := ctx.Query("code")
+		codeVerifier, _ := session.Get("code_verifier").(string)
 
 		log.Printf("[callback] received redirect state=%s codeLen=%d", queryState, len(authorizationCode))
 
@@ -30,7 +31,11 @@ func Callback(auth *authenticator.Authenticator) gin.HandlerFunc {
 
 		// Exchange an authorization code for a token.
 		exchangeCtx := withHTTPClient(ctx.Request.Context(), auth.HTTPClient)
-		token, err := auth.Exchange(exchangeCtx, authorizationCode)
+		token, err := auth.Exchange(
+			exchangeCtx,
+			authorizationCode,
+			oauth2.SetAuthURLParam("code_verifier", codeVerifier),
+		)
 		if err != nil {
 			log.Printf("[callback] token exchange failed: %v", err)
 			ctx.String(http.StatusUnauthorized, "Failed to exchange an authorization code for a token.")
@@ -55,6 +60,8 @@ func Callback(auth *authenticator.Authenticator) gin.HandlerFunc {
 
 		session.Set("access_token", token.AccessToken)
 		session.Set("profile", profile)
+		session.Delete("code_verifier")
+		session.Delete("state")
 		if err := session.Save(); err != nil {
 			ctx.String(http.StatusInternalServerError, err.Error())
 			return
