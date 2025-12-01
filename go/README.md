@@ -23,6 +23,7 @@ Create a file named `.env`:
     AUTH0_CLIENT_ID=YOUR_CLIENT_ID
     AUTH0_CLIENT_SECRET=YOUR_CLIENT_SECRET
     APP_BASE_URL=https://your-codespace-id-3000.app.github.dev
+    AUTH0_AUDIENCE=https://YOUR-API-IDENTIFIER   # optional, required if you want an API Access Token
 
 > Codespaces gives you a public URL that looks like\
 > `https://<id>-3000.app.github.dev`\
@@ -62,7 +63,8 @@ Assume your Codespaces public URL is:
 
 -   `/login`\
     → generates a state value\
-    → redirects to Auth0 Universal Login
+    → builds a PKCE challenge (S256)\
+    → redirects to Auth0 Universal Login (includes `audience` if configured)
 
 -   After successful login\
     Auth0 redirects back to:
@@ -81,6 +83,10 @@ Assume your Codespaces public URL is:
 -   `/logout`\
     → redirects to Auth0's logout endpoint\
     → returns the user to your Codespaces URL
+
+-   `/userinfo`\
+    → uses the stored Access Token\
+    → calls Auth0's `/userinfo` endpoint and returns the JSON response
 
 ------------------------------------------------------------------------
 
@@ -101,6 +107,7 @@ Open the forwarded HTTPS URL in your browser, and you should be able to:
 -   Use Auth0 Universal Login\
 -   Return authenticated to `/user`\
 -   View your profile info
+-   Click **Call /userinfo** to see the Access Token in action
 
 ------------------------------------------------------------------------
 

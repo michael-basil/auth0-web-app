@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -39,11 +40,15 @@ func Login(auth *authenticator.Authenticator) gin.HandlerFunc {
 			return
 		}
 
-		redirectURL := auth.AuthCodeURL(
-			state,
+		options := []oauth2.AuthCodeOption{
 			oauth2.SetAuthURLParam("code_challenge", codeChallenge),
 			oauth2.SetAuthURLParam("code_challenge_method", "S256"),
-		)
+		}
+		if audience := os.Getenv("AUTH0_AUDIENCE"); audience != "" {
+			options = append(options, oauth2.SetAuthURLParam("audience", audience))
+		}
+
+		redirectURL := auth.AuthCodeURL(state, options...)
 		log.Printf("[login] generated state %s pkce challenge %s redirecting to %s", state, codeChallenge, redirectURL)
 		ctx.Redirect(http.StatusTemporaryRedirect, redirectURL)
 	}
